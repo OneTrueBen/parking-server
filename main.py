@@ -116,7 +116,7 @@ def shit():
 	
 	#quickly integrate some parking data triva from montreal
 	parkingTrivia = 0
-	with open("BornesSurRue.csv") as f:
+	with open("BornesSurRueV21.csv") as f:
 		reader = csv.reader(f)
 		chosen_row = random.choice(list(reader))
 	print("Random crap")
