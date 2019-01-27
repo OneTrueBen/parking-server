@@ -5,6 +5,8 @@ import io
 import os
 import datetime
 import json
+import csv
+import random
 
 # Imports the Google Cloud client library
 from google.cloud import vision
@@ -112,11 +114,20 @@ def shit():
 		TitleReturnWindowReturn = 'Not a sign'
 		mainWindowReturn = "This is not a valid sign"
 	
-	
+	#quickly integrate some parking data triva from montreal
+	parkingTrivia = 0
+	with open("BornesSurRue.csv") as f:
+		reader = csv.reader(f)
+		chosen_row = random.choice(list(reader))
+	print("Random crap")
+	print(chosen_row)
+	parkingTrivia = "If you have a type: " + chosen_row[3] + " parking permit, you can park on " + chosen_row[2] + " street."
+	print(parkingTrivia)
 	#Json stuff
 	data = {}
 	data['Title'] = TitleReturnWindowReturn
 	data['Text'] = mainWindowReturn
+	data['Trivia'] = parkingTrivia
 	json_data = json.dumps(data)	
 	#end of json stuff
 	print('Something')
