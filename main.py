@@ -82,10 +82,10 @@ def shit():
 	print(SecondTimeText)
 	#Code for no parking
 	#Calculate hours left to park
-	if (int(FirstTimeText) > (currentDT.hour - 5)):
-		HoursLeftParking = int(FirstTimeText) - currentDT.hour - 5
+	if (int(FirstTimeText) > (currentDT.hour + 5)):
+		HoursLeftParking = abs(int(FirstTimeText)) - currentDT.hour + 5
 	else:
-		HoursLeftParking = currentDT.hour - int(FirstTimeText) - 5
+		HoursLeftParking = currentDT.hour - abs(int(FirstTimeText)) + 5
 	#Calculate days left to park
 	print('Hours left')
 	print(HoursLeftParking-1)
@@ -98,7 +98,7 @@ def shit():
 	print(MinutesLeftParking-1)
 	#Calculate days left
 	ExpiryDate = datetime.date(2019,4,1)
-	CurrentDate = datetime.date(2019,currentDT.month,currentDT.day)
+	CurrentDate = datetime.date(2019,currentDT.month,currentDT.day - 1)
 	print("Days Left")
 	print((ExpiryDate-CurrentDate).days)
 	
