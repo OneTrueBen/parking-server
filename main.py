@@ -17,13 +17,18 @@ app = Flask(__name__)
 #0 means not relevant
 #1 means no parking
 #2 means only during set time
-IsASign = 0
-CurrentTime = 0
-CurrentDT = 0
 
 
 @app.route('/', methods=['POST'])
 def shit():
+	#Variable init
+	IsASign = 0
+	CurrentTime = 0
+	CurrentDT = 0
+	HoursLeftParking = 0
+	MinutesLeftParking = 0
+	
+	#cloud stuff
 	client = vision.ImageAnnotatorClient()
 	content = Image.open(request.files['image'])
 	imgByteArr = io.BytesIO()
@@ -48,26 +53,70 @@ def shit():
 	for logo in logos:
 		if (logo.description == "bad religion"):
 			IsASign = 1
-		print(logo.description)	
+		print(logo.description)
+	#Get labels to also tell if it's an image
+	response = client.label_detection(image=image)
+	labels = response.label_annotations
+	print('Labels:')
+	
+	for label in labels:
+		if (label.description == "Street sign"):
+			IsASign = 1
+		print(label.description)	
+	
 	#Actual Guessing of signs meaning
 	currentDT = datetime.datetime.now()
 	print('Is a sign')
 	print(IsASign)
 	#Extract conditions start time
 	FirstTime = texts[0].description.find('h')
-	print('Start time')
-	print(texts[0].description[(FirstTime-2):(FirstTime)])
+	FirstTimeText = texts[0].description[(FirstTime-2):(FirstTime)]
+	print('First time')
+	print(FirstTimeText)
 	#Extract conditions end time
+	SecondTime = texts[0].description[FirstTime+1:].find('h')
+	SecondTimeText = texts[0].description[(FirstTime+SecondTime-1):FirstTime+SecondTime+1]
+	print('Second time')
+	print(SecondTimeText)
 	#Code for no parking
-	#SecondTime = texts[0].description[(FirstTime):].description.find('h')
-	#print('End time')
-	#print(texts[0].description[(SecondTime-2):(SecondTime)])
+	#Calculate hours left to park
+	if (int(FirstTimeText) > currentDT.hour):
+		HoursLeftParking = int(FirstTimeText) - currentDT.hour
+	else:
+		HoursLeftParking = currentDT.hour - int(FirstTimeText)
+	#Calculate days left to park
+	print('Hours left')
+	print(HoursLeftParking-1)
+	#Calculate minutes left to park
+	if (int(FirstTimeText) > currentDT.minute):
+		MinutesLeftParking = 60 - currentDT.minute
+	else:
+		MinutesLeftParking = 60 - currentDT.minute
+	print('Minutes left')
+	print(MinutesLeftParking-1)
+	#Calculate days left
+	ExpiryDate = datetime.date(2019,4,1)
+	CurrentDate = datetime.date(2019,currentDT.month,currentDT.day)
+	print("Days Left")
+	print((ExpiryDate-CurrentDate).days)
+	
+	#Final prints
+	mainWindowReturn = 0
+	TitleReturnWindowReturn = 0
+	
+	mainWindowReturn = "You can park for " + str((ExpiryDate-CurrentDate).days) + " days, " + str(HoursLeftParking) + " hours" + " and " + str(MinutesLeftParking) + " minutes."
+	
+	if (IsASign != 0):
+		TitleReturnWindowReturn = 'Valid Sign'
+	else:
+		TitleReturnWindowReturn = 'Not a sign'
+		mainWindowReturn = "This is not a valid sign"
 	
 	
 	#Json stuff
 	data = {}
-	data['Title'] = 'Image Result'
-	data['Text'] = 'The main windows text'
+	data['Title'] = TitleReturnWindowReturn
+	data['Text'] = mainWindowReturn
 	json_data = json.dumps(data)	
 	#end of json stuff
 	print('Something')
