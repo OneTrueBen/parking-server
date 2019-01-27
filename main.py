@@ -82,10 +82,10 @@ def shit():
 	print(SecondTimeText)
 	#Code for no parking
 	#Calculate hours left to park
-	if (int(FirstTimeText) > currentDT.hour):
-		HoursLeftParking = int(FirstTimeText) - currentDT.hour
+	if (int(FirstTimeText) > (currentDT.hour - 5)):
+		HoursLeftParking = int(FirstTimeText) - currentDT.hour - 5
 	else:
-		HoursLeftParking = currentDT.hour - int(FirstTimeText)
+		HoursLeftParking = currentDT.hour - int(FirstTimeText) - 5
 	#Calculate days left to park
 	print('Hours left')
 	print(HoursLeftParking-1)
@@ -109,9 +109,9 @@ def shit():
 	mainWindowReturn = "You can park for " + str((ExpiryDate-CurrentDate).days) + " days, " + str(HoursLeftParking) + " hours" + " and " + str(MinutesLeftParking) + " minutes."
 	
 	if (IsASign != 0):
-		TitleReturnWindowReturn = 'Valid Sign'
+		TitleReturnWindowReturn = 'You can park here!'
 	else:
-		TitleReturnWindowReturn = 'Not a sign'
+		TitleReturnWindowReturn = 'You cannot park here!'
 		mainWindowReturn = "This is not a valid sign"
 	
 	#quickly integrate some parking data triva from montreal
