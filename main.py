@@ -122,12 +122,12 @@ def shit():
 	print("Random crap")
 	print(chosen_row)
 	parkingTrivia = "If you have a type: " + chosen_row[3] + " parking permit, you can park on " + chosen_row[2] + " street."
-	print(parkingTrivia)
+	mainWindowReturn = mainWindowReturn + "\n" + parkingTrivia
+	print(mainWindowReturn)
 	#Json stuff
 	data = {}
 	data['Title'] = TitleReturnWindowReturn
 	data['Text'] = mainWindowReturn
-	data['Trivia'] = parkingTrivia
 	json_data = json.dumps(data)	
 	#end of json stuff
 	print('Something')
